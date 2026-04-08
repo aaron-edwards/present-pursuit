@@ -264,7 +264,7 @@ iframe {
 
 .hero-buddy-card {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 104px;
+  grid-template-columns: minmax(0, 1fr) 96px;
   align-items: center;
   gap: 10px;
   border: 1px solid rgba(217, 212, 255, 0.78);
@@ -319,6 +319,24 @@ iframe {
   align-items: center;
 }
 
+.hero-buddy-asset.unicorn-image-shell {
+  width: 96px;
+  height: 96px;
+}
+
+.clue-buddy.unicorn-image-shell {
+  width: 168px;
+  height: 168px;
+  margin: 0 auto;
+}
+
+.celebration-buddy.unicorn-image-shell,
+.finish-buddy.unicorn-image-shell,
+.success-buddy.unicorn-image-shell {
+  width: 128px;
+  height: 128px;
+}
+
 .unicorn-image-shell {
   position: relative;
   width: 256px;
@@ -331,6 +349,7 @@ iframe {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: contain;
   opacity: 0;
   transition: opacity 220ms ease;
 }
@@ -1078,7 +1097,7 @@ code {
   }
 
   .hero-buddy-card {
-    grid-template-columns: minmax(0, 1fr) 220px;
+    grid-template-columns: minmax(0, 1fr) 180px;
     gap: 18px;
     padding: 18px 18px 18px 20px;
   }
@@ -1090,6 +1109,24 @@ code {
   .meta-row {
     gap: 16px;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+
+  .hero-buddy-asset.unicorn-image-shell {
+    width: 180px;
+    height: 180px;
+  }
+
+  .clue-buddy.unicorn-image-shell {
+    width: 192px;
+    height: 192px;
+    margin: 0 auto;
+  }
+
+  .celebration-buddy.unicorn-image-shell,
+  .finish-buddy.unicorn-image-shell,
+  .success-buddy.unicorn-image-shell {
+    width: 160px;
+    height: 160px;
   }
 
   .meta-chip {

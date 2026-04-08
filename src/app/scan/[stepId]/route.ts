@@ -16,6 +16,7 @@ import {
   isStepCompleted,
   readProgressCookie,
 } from "@/lib/progress";
+import { getOriginFromHeaders } from "@/lib/site";
 
 type ScanRouteContext = {
   params: Promise<{
@@ -41,6 +42,7 @@ export async function GET(request: Request, context: ScanRouteContext) {
   const { stepId } = await context.params;
   const step = getStepByPublicSlug(stepId);
   const requestUrl = new URL(request.url);
+  const origin = getOriginFromHeaders(request.headers);
   const inlineMode = requestUrl.searchParams.get("mode") === "inline";
 
   if (!step) {
@@ -48,7 +50,7 @@ export async function GET(request: Request, context: ScanRouteContext) {
       return NextResponse.json({ destination: "/hunt", status: "redirect" });
     }
 
-    return NextResponse.redirect(new URL("/hunt", request.url));
+    return NextResponse.redirect(new URL("/hunt", origin));
   }
 
   const progress = await readProgressCookie();
@@ -57,7 +59,7 @@ export async function GET(request: Request, context: ScanRouteContext) {
       return NextResponse.json({ destination: "/start", status: "redirect" });
     }
 
-    return NextResponse.redirect(new URL("/start", request.url));
+    return NextResponse.redirect(new URL("/start", origin));
   }
 
   if (isStepCompleted(progress, stepId)) {
@@ -74,7 +76,7 @@ export async function GET(request: Request, context: ScanRouteContext) {
     return NextResponse.redirect(
       new URL(
         currentStep ? getHuntDestination(currentStep.id) : "/done",
-        request.url,
+        origin,
       ),
     );
   }
@@ -93,7 +95,7 @@ export async function GET(request: Request, context: ScanRouteContext) {
     return NextResponse.redirect(
       new URL(
         currentStep ? getHuntDestination(currentStep.id) : "/done",
-        request.url,
+        origin,
       ),
     );
   }
@@ -115,9 +117,7 @@ export async function GET(request: Request, context: ScanRouteContext) {
             : "Go to the next clue",
         status: "success",
       })
-    : NextResponse.redirect(
-        new URL(getCelebrateDestination(step.id), request.url),
-      );
+    : NextResponse.redirect(new URL(getCelebrateDestination(step.id), origin));
 
   response.cookies.set({
     name: getCookieName(),

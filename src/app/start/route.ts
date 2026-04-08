@@ -6,10 +6,12 @@ import {
   getCookieName,
   getProgressCookieValue,
 } from "@/lib/progress";
+import { getOriginFromHeaders } from "@/lib/site";
 
 export async function GET(request: Request) {
+  const origin = getOriginFromHeaders(request.headers);
   const response = NextResponse.redirect(
-    new URL(getHuntDestination(getFirstStep().id), request.url),
+    new URL(getHuntDestination(getFirstStep().id), origin),
   );
 
   response.cookies.set({
