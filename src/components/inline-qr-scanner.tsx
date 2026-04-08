@@ -45,6 +45,7 @@ export function InlineQrScanner() {
   const detectorRef = useRef<BarcodeDetectorLike | null>(null);
   const frameRef = useRef<number | null>(null);
   const [scannerOpen, setScannerOpen] = useState(false);
+  const [showAvailabilityPopup, setShowAvailabilityPopup] = useState(false);
   const [scanStatus, setScanStatus] = useState<ScanStatus>({
     kind: "idle",
     message:
@@ -128,6 +129,7 @@ export function InlineQrScanner() {
     let cancelled = false;
 
     async function startScanner() {
+      setShowAvailabilityPopup(false);
       setScanStatus({
         kind: "starting",
         message: "Opening the rear camera...",
@@ -269,22 +271,44 @@ export function InlineQrScanner() {
         {!scannerOpen ? (
           <button
             className="button button-primary"
-            disabled={!supported}
-            onClick={() => setScannerOpen(true)}
+            onClick={() => {
+              if (!supported) {
+                setShowAvailabilityPopup(true);
+                return;
+              }
+
+              setScannerOpen(true);
+            }}
             type="button"
           >
-            {supported ? "Open Camera Scanner" : "Scanner Unavailable Here"}
+            {supported ? "Open Camera Scanner" : "Why Scanner Is Unavailable"}
           </button>
         ) : (
           <button
             className="button button-secondary"
-            onClick={() => setScannerOpen(false)}
+            onClick={() => {
+              setScannerOpen(false);
+              setShowAvailabilityPopup(false);
+            }}
             type="button"
           >
             Close Camera
           </button>
         )}
       </div>
+
+      {showAvailabilityPopup && availabilityMessage ? (
+        <div aria-live="polite" className="scanner-popup" role="alert">
+          <p>{availabilityMessage}</p>
+          <button
+            className="button button-secondary"
+            onClick={() => setShowAvailabilityPopup(false)}
+            type="button"
+          >
+            Dismiss
+          </button>
+        </div>
+      ) : null}
 
       {scannerOpen ? (
         <div className="scanner-frame">

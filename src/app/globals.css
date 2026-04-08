@@ -356,6 +356,22 @@ figcaption {
   pointer-events: none;
 }
 
+.scanner-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 38%, white);
+  border-radius: 22px;
+  padding: 16px;
+  background: color-mix(in srgb, var(--color-accent-soft) 72%, white);
+  box-shadow: var(--shadow-soft);
+}
+
+.scanner-popup p {
+  margin: 0;
+  line-height: 1.6;
+}
+
 .qr-grid {
   display: grid;
   gap: 16px;
