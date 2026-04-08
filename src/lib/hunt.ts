@@ -1,5 +1,19 @@
 import huntFile from "@/content/hunt.json";
 
+const BUDDY_IMAGE_SOURCES = {
+  cheer: "/media/unicorns/unicorn-party-new.png",
+  cloudLeap: "/media/unicorns/unicorn-surf.png",
+  cloudSeat: "/media/unicorns/unicorn-bake.png",
+  happy: "/media/unicorns/unicorn-wave.png",
+  sparklers: "/media/unicorns/unicorn-wizard.png",
+  bubbles: "/media/unicorns/unicorn-bubbles-new.png",
+  triceratops: "/media/unicorns/unicorn-triceratops.png",
+  racecar: "/media/unicorns/unicorn-racecar.png",
+  painting: "/media/unicorns/unicorn-painting.png",
+  flowers: "/media/unicorns/unicorn-flowers.png",
+  donut: "/media/unicorns/unicorn-donut.png",
+} as const;
+
 export type BuddyVariant =
   | "cheer"
   | "cloudLeap"
@@ -167,6 +181,10 @@ export function getClueBuddyVariant(stepNumber: number): BuddyVariant {
   const clueCycle = huntConfig.buddy.clueCycle;
   const cycleIndex = (Math.max(stepNumber, 1) - 1) % clueCycle.length;
   return clueCycle[cycleIndex];
+}
+
+export function getBuddyImageSrc(variant: BuddyVariant): string {
+  return BUDDY_IMAGE_SOURCES[variant];
 }
 
 export function getNextDestination(stepId: string): string {

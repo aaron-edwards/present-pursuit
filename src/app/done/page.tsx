@@ -1,15 +1,9 @@
 import { redirect } from "next/navigation";
 
 import { HuntShell } from "@/components/hunt-shell";
-import { ProgressTracker } from "@/components/progress-tracker";
 import { UnicornBuddy } from "@/components/unicorn-buddy";
 import { getCelebrationBuddyVariant, getHunt } from "@/lib/hunt";
-import {
-  getCompletionItems,
-  isComplete,
-  isStarted,
-  readProgressCookie,
-} from "@/lib/progress";
+import { isComplete, isStarted, readProgressCookie } from "@/lib/progress";
 
 export default async function DonePage() {
   const hunt = getHunt();
@@ -40,7 +34,6 @@ export default async function DonePage() {
           imageClassName="finish-buddy-image"
           variant={getCelebrationBuddyVariant()}
         />
-        <ProgressTracker items={getCompletionItems(progress)} />
         <p className="lede finish-verse">
           {hunt.finish.body.map((line, lineIndex) => (
             <span key={line}>
@@ -60,9 +53,6 @@ export default async function DonePage() {
             View QR Sheet
           </a>
         </div>
-        <p className="footer-note">
-          Swap this copy for the real reveal once your final verses are ready.
-        </p>
       </section>
     </HuntShell>
   );
