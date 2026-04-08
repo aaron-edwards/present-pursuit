@@ -526,6 +526,13 @@ figcaption {
   background: rgba(255, 255, 255, 0.86);
 }
 
+.poem-reader-button {
+  width: auto;
+  min-height: 44px;
+  align-self: flex-start;
+  padding: 0 16px;
+}
+
 .magic-list {
   display: flex;
   flex-wrap: wrap;

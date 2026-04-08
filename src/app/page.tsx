@@ -1,4 +1,5 @@
 import { HuntShell } from "@/components/hunt-shell";
+import { PoemReader } from "@/components/poem-reader";
 import { UnicornBuddy } from "@/components/unicorn-buddy";
 import { getGreetingBuddyVariant, getHunt } from "@/lib/hunt";
 
@@ -20,6 +21,8 @@ export default function HomePage() {
                 </span>
               ))}
             </p>
+
+            <PoemReader lines={hunt.intro.body} />
 
             <div className="hero-buddy-card">
               <div className="hero-buddy-copy">

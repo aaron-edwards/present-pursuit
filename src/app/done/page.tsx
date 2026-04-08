@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { HuntShell } from "@/components/hunt-shell";
+import { PoemReader } from "@/components/poem-reader";
 import { UnicornBuddy } from "@/components/unicorn-buddy";
 import { getCelebrationBuddyVariant, getHunt } from "@/lib/hunt";
 import { isComplete, isStarted, readProgressCookie } from "@/lib/progress";
@@ -42,6 +43,7 @@ export default async function DonePage() {
             </span>
           ))}
         </p>
+        <PoemReader lines={hunt.finish.body} />
         <div className="button-group">
           <a
             className="button button-primary"

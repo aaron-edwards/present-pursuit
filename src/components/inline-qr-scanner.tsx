@@ -299,6 +299,9 @@ export function InlineQrScanner() {
               );
 
               if (match?.rawValue) {
+                console.debug("[scanner] QR detected", {
+                  rawValue: match.rawValue,
+                });
                 processingRef.current = true;
                 setScanStatus({
                   kind: "active",
@@ -307,14 +310,26 @@ export function InlineQrScanner() {
 
                 const inlineUrl = new URL(match.rawValue, window.location.href);
                 inlineUrl.searchParams.set("mode", "inline");
+                console.debug("[scanner] Fetching inline scan result", {
+                  inlineUrl: inlineUrl.toString(),
+                });
 
                 const response = await fetch(inlineUrl.toString(), {
                   credentials: "same-origin",
                 });
+                console.debug("[scanner] Inline scan HTTP response", {
+                  ok: response.ok,
+                  status: response.status,
+                  url: response.url,
+                });
 
                 const result = (await response.json()) as InlineScanResult;
+                console.debug("[scanner] Inline scan payload", result);
 
                 if (result.status === "redirect") {
+                  console.debug("[scanner] Redirecting browser", {
+                    destination: result.destination,
+                  });
                   for (const track of stream.getTracks()) {
                     track.stop();
                   }
@@ -323,6 +338,10 @@ export function InlineQrScanner() {
                 }
 
                 if (result.status === "blocked") {
+                  console.debug("[scanner] Wrong or out-of-order QR", {
+                    message: result.message,
+                    currentDestination: result.currentDestination,
+                  });
                   setScannerFeedback("error");
                   setScanStatus({
                     kind: "active",
@@ -331,10 +350,15 @@ export function InlineQrScanner() {
                   feedbackTimeoutRef.current = window.setTimeout(() => {
                     setScannerFeedback("idle");
                     processingRef.current = false;
+                    frameRef.current = requestAnimationFrame(scanFrame);
                   }, 850);
                   return;
                 }
 
+                console.debug("[scanner] Correct QR accepted", {
+                  nextDestination: result.nextDestination,
+                  nextLabel: result.nextLabel,
+                });
                 setScannerFeedback("success");
                 setScanStatus({
                   kind: "active",
@@ -350,6 +374,9 @@ export function InlineQrScanner() {
                     nextDestination: result.nextDestination,
                     nextLabel: result.nextLabel,
                   });
+                  console.debug("[scanner] Opening success dialog", {
+                    nextDestination: result.nextDestination,
+                  });
                   setScannerOpen(false);
                   setSuccessOpen(true);
                   setScannerFeedback("idle");
@@ -358,6 +385,7 @@ export function InlineQrScanner() {
                 return;
               }
             } catch {
+              console.debug("[scanner] QR detection or fetch failed");
               processingRef.current = false;
               setScanStatus({
                 kind: "error",

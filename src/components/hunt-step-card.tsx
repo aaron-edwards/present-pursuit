@@ -1,4 +1,5 @@
 import { InlineQrScannerShell } from "@/components/inline-qr-scanner-shell";
+import { PoemReader } from "@/components/poem-reader";
 import { UnicornBuddy } from "@/components/unicorn-buddy";
 import { getClueBuddyVariant, type HuntStep } from "@/lib/hunt";
 
@@ -27,6 +28,8 @@ export function HuntStepCard({
           </span>
         ))}
       </p>
+
+      <PoemReader lines={step.body} />
 
       <UnicornBuddy
         className="clue-buddy"
