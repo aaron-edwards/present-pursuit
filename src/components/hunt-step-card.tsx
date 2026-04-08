@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import { InlineQrScannerShell } from "@/components/inline-qr-scanner-shell";
 import { UnicornBuddy } from "@/components/unicorn-buddy";
 import type { HuntStep } from "@/lib/hunt";
@@ -18,11 +16,13 @@ export function HuntStepCard({
   const companionVariant =
     stepNumber === 1
       ? "triceratops"
-      : stepNumber % 4 === 2
+      : stepNumber % 5 === 2
         ? "flowers"
-        : stepNumber % 4 === 3
+        : stepNumber % 5 === 3
           ? "painting"
-          : "donut";
+          : stepNumber % 5 === 4
+            ? "racecar"
+            : "donut";
 
   return (
     <>
@@ -32,33 +32,6 @@ export function HuntStepCard({
         </p>
         <h2>{step.title}</h2>
         <p className="lede clue-lede">{step.body}</p>
-
-        {step.type === "image" && step.mediaUrl ? (
-          <figure className="media-frame">
-            <Image
-              className="clue-image"
-              src={step.mediaUrl}
-              alt={step.caption ?? step.title}
-              width={1200}
-              height={900}
-            />
-            {step.caption ? <figcaption>{step.caption}</figcaption> : null}
-          </figure>
-        ) : null}
-
-        {step.type === "video" && step.embedUrl ? (
-          <div className="video-stack">
-            <div className="video-frame">
-              <iframe
-                title={step.title}
-                src={step.embedUrl}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-            {step.caption ? <p className="caption">{step.caption}</p> : null}
-          </div>
-        ) : null}
 
         <InlineQrScannerShell />
       </article>
