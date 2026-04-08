@@ -9,14 +9,12 @@ type HuntStepCardProps = {
   step: HuntStep;
   stepNumber: number;
   totalSteps: number;
-  nextDestinationLabel: string;
 };
 
 export function HuntStepCard({
   step,
   stepNumber,
   totalSteps,
-  nextDestinationLabel,
 }: HuntStepCardProps) {
   return (
     <article className="card">
@@ -53,34 +51,7 @@ export function HuntStepCard({
         </div>
       ) : null}
 
-      <div className="scan-card">
-        <p className="scan-title">
-          When you find the matching location, scan the hidden QR there.
-        </p>
-        <p className="scan-copy">{nextDestinationLabel}</p>
-      </div>
-
       <InlineQrScanner />
-
-      {step.hint || step.hintImage ? (
-        <details className="hint-block">
-          <summary className="hint-summary">Show Hint</summary>
-          <div className="hint-content">
-            <div className="hint-panel">
-              {step.hint ? <p>{step.hint}</p> : null}
-              {step.hintImage ? (
-                <Image
-                  className="hint-image"
-                  src={step.hintImage}
-                  alt="Hint illustration"
-                  width={1200}
-                  height={900}
-                />
-              ) : null}
-            </div>
-          </div>
-        </details>
-      ) : null}
     </article>
   );
 }

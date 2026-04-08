@@ -1,7 +1,25 @@
 import { redirect } from "next/navigation";
 
-import { getFirstStep } from "@/lib/hunt";
+import { getHunt } from "@/lib/hunt";
+import {
+  getCurrentStepIndex,
+  isComplete,
+  isStarted,
+  readProgressCookie,
+} from "@/lib/progress";
 
-export default function HuntEntryPage() {
-  redirect(`/hunt/${getFirstStep().id}`);
+export default async function HuntEntryPage() {
+  const progress = await readProgressCookie();
+
+  if (!isStarted(progress)) {
+    redirect("/start");
+  }
+
+  if (isComplete(progress)) {
+    redirect("/done");
+  }
+
+  const hunt = getHunt();
+  const currentStep = hunt.steps[getCurrentStepIndex(progress)];
+  redirect(`/hunt/${currentStep.id}`);
 }

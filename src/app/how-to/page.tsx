@@ -42,7 +42,7 @@ export default function HowToPage() {
           ))}
         </div>
         <div className="button-group">
-          <a className="button button-primary" href="/hunt">
+          <a className="button button-primary" href="/start">
             Start The Hunt
           </a>
           <a className="button button-secondary" href="/">

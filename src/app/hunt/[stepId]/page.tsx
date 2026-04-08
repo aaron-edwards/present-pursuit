@@ -1,13 +1,16 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { HuntShell } from "@/components/hunt-shell";
 import { HuntStepCard } from "@/components/hunt-step-card";
+import { ProgressTracker } from "@/components/progress-tracker";
+import { getHunt, getStepById, getStepIndex } from "@/lib/hunt";
 import {
-  getHunt,
-  getNextDestination,
-  getStepById,
-  getStepIndex,
-} from "@/lib/hunt";
+  getCompletionItems,
+  getCurrentStepIndex,
+  isComplete,
+  isStarted,
+  readProgressCookie,
+} from "@/lib/progress";
 
 type StepPageProps = {
   params: Promise<{
@@ -19,22 +22,31 @@ export default async function StepPage({ params }: StepPageProps) {
   const { stepId } = await params;
   const hunt = getHunt();
   const step = getStepById(stepId);
+  const progress = await readProgressCookie();
 
   if (!step) {
     notFound();
   }
 
+  if (!isStarted(progress)) {
+    redirect("/start");
+  }
+
+  if (isComplete(progress)) {
+    redirect("/done");
+  }
+
   const stepIndex = getStepIndex(step.id);
-  const nextDestination = getNextDestination(step.id);
-  const nextDestinationLabel =
-    nextDestination === "/done"
-      ? "The final QR should sit beside the present or final reveal, because scanning it opens the ending."
-      : "The next QR opens the following clue directly, so hide it at the answer to this step.";
+  const currentStep = hunt.steps[getCurrentStepIndex(progress)];
+
+  if (currentStep.id !== step.id) {
+    redirect(`/hunt/${currentStep.id}`);
+  }
 
   return (
     <HuntShell>
+      <ProgressTracker items={getCompletionItems(progress)} />
       <HuntStepCard
-        nextDestinationLabel={nextDestinationLabel}
         step={step}
         stepNumber={stepIndex + 1}
         totalSteps={hunt.steps.length}

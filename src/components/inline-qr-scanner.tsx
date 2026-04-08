@@ -41,6 +41,7 @@ function isNavigableResult(result: string): boolean {
 
 export function InlineQrScanner() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const dialogRef = useRef<HTMLDialogElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const detectorRef = useRef<BarcodeDetectorLike | null>(null);
   const frameRef = useRef<number | null>(null);
@@ -85,6 +86,21 @@ export function InlineQrScanner() {
 
     return null;
   }, []);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) {
+      return;
+    }
+
+    if (scannerOpen && !dialog.open) {
+      dialog.showModal();
+    }
+
+    if (!scannerOpen && dialog.open) {
+      dialog.close();
+    }
+  }, [scannerOpen]);
 
   useEffect(() => {
     return () => {
@@ -259,42 +275,25 @@ export function InlineQrScanner() {
   return (
     <section className="scanner-card">
       <div className="scanner-copy">
-        <p className="eyebrow">In-Page Scanner</p>
-        <h3>Use the phone camera without leaving the hunt</h3>
-        <p>{scanStatus.message}</p>
-        {availabilityMessage ? (
-          <p className="scanner-warning">{availabilityMessage}</p>
-        ) : null}
+        <p className="eyebrow">Ready?</p>
+        <h3>Scan the QR</h3>
       </div>
 
       <div className="button-group">
-        {!scannerOpen ? (
-          <button
-            className="button button-primary"
-            onClick={() => {
-              if (!supported) {
-                setShowAvailabilityPopup(true);
-                return;
-              }
+        <button
+          className="button button-primary"
+          onClick={() => {
+            if (!supported) {
+              setShowAvailabilityPopup(true);
+              return;
+            }
 
-              setScannerOpen(true);
-            }}
-            type="button"
-          >
-            {supported ? "Open Camera Scanner" : "Why Scanner Is Unavailable"}
-          </button>
-        ) : (
-          <button
-            className="button button-secondary"
-            onClick={() => {
-              setScannerOpen(false);
-              setShowAvailabilityPopup(false);
-            }}
-            type="button"
-          >
-            Close Camera
-          </button>
-        )}
+            setScannerOpen(true);
+          }}
+          type="button"
+        >
+          {supported ? "Open Camera Scanner" : "Why Scanner Is Unavailable"}
+        </button>
       </div>
 
       {showAvailabilityPopup && availabilityMessage ? (
@@ -310,18 +309,62 @@ export function InlineQrScanner() {
         </div>
       ) : null}
 
-      {scannerOpen ? (
-        <div className="scanner-frame">
-          <video
-            ref={videoRef}
-            autoPlay
-            className="scanner-video"
-            muted
-            playsInline
-          />
-          <div className="scanner-target" />
+      <dialog
+        aria-label="QR scanner"
+        className="scanner-dialog"
+        onClick={(event) => {
+          if (event.target === event.currentTarget) {
+            setScannerOpen(false);
+          }
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") {
+            setScannerOpen(false);
+          }
+        }}
+        onClose={() => {
+          setScannerOpen(false);
+          setShowAvailabilityPopup(false);
+        }}
+        ref={dialogRef}
+      >
+        <div className="scanner-dialog-panel">
+          <div className="scanner-dialog-header">
+            <div>
+              <p className="eyebrow">Scanner</p>
+              <h3>Scan the hidden QR</h3>
+            </div>
+            <button
+              aria-label="Close scanner"
+              className="scanner-close"
+              onClick={() => setScannerOpen(false)}
+              type="button"
+            >
+              Close
+            </button>
+          </div>
+
+          <p className="scanner-status-text">{scanStatus.message}</p>
+          {availabilityMessage ? (
+            <p className="scanner-warning">{availabilityMessage}</p>
+          ) : null}
+
+          <div className="scanner-frame scanner-frame-dialog">
+            <video
+              ref={videoRef}
+              autoPlay
+              className="scanner-video"
+              muted
+              playsInline
+            />
+            <div className="scanner-target" />
+          </div>
+
+          <p className="scanner-help">
+            Hold the QR inside the frame and keep the phone steady for a moment.
+          </p>
         </div>
-      ) : null}
+      </dialog>
     </section>
   );
 }

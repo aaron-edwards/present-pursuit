@@ -20,7 +20,7 @@
       "You can change the copy, add a call-to-action link, or even send her to one final real-world location."
     ],
     "ctaLabel": "Celebrate Again",
-    "ctaHref": "/hunt"
+    "ctaHref": "/start"
   },
   "theme": {
     "accent": "#6a63ff",

@@ -1,6 +1,6 @@
 import { HuntShell } from "@/components/hunt-shell";
 import { QrCard } from "@/components/qr-card";
-import { getHunt, getNextDestination } from "@/lib/hunt";
+import { getHunt } from "@/lib/hunt";
 import { getBaseUrl } from "@/lib/site";
 
 export default async function QrPage() {
@@ -22,15 +22,15 @@ export default async function QrPage() {
         <QrCard
           title="Start Hunt"
           subtitle="Use this if you want the intro page itself as a scannable starting point."
-          value={`${baseUrl}/`}
+          value={`${baseUrl}/start`}
         />
 
         {hunt.steps.map((step) => (
           <QrCard
             key={step.id}
             title={`${step.order}. ${step.title}`}
-            subtitle={`Hide this where clue ${step.order} should lead. It opens ${getNextDestination(step.id)}.`}
-            value={`${baseUrl}${getNextDestination(step.id)}`}
+            subtitle={`Hide this at the answer to clue ${step.order}. Scanning it records progress and unlocks the next screen.`}
+            value={`${baseUrl}/scan/${step.id}`}
           />
         ))}
       </section>

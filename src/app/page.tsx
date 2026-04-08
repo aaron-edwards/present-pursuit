@@ -19,7 +19,7 @@ export default function HomePage() {
             </p>
 
             <div className="button-group">
-              <a className="button button-primary" href="/hunt">
+              <a className="button button-primary" href="/start">
                 {hunt.intro.startLabel}
               </a>
               <a className="button button-secondary" href="/how-to">

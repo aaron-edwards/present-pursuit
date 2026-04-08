@@ -1,8 +1,26 @@
-import { HuntShell } from "@/components/hunt-shell";
-import { getHunt } from "@/lib/hunt";
+import { redirect } from "next/navigation";
 
-export default function DonePage() {
+import { HuntShell } from "@/components/hunt-shell";
+import { ProgressTracker } from "@/components/progress-tracker";
+import { getHunt } from "@/lib/hunt";
+import {
+  getCompletionItems,
+  isComplete,
+  isStarted,
+  readProgressCookie,
+} from "@/lib/progress";
+
+export default async function DonePage() {
   const hunt = getHunt();
+  const progress = await readProgressCookie();
+
+  if (!isStarted(progress)) {
+    redirect("/start");
+  }
+
+  if (!isComplete(progress)) {
+    redirect("/hunt");
+  }
 
   return (
     <HuntShell>
@@ -15,13 +33,14 @@ export default function DonePage() {
       </section>
 
       <section className="finish-card celebration-card">
+        <ProgressTracker items={getCompletionItems(progress)} />
         {hunt.finish.body.map((paragraph) => (
           <p key={paragraph}>{paragraph}</p>
         ))}
         <div className="button-group">
           <a
             className="button button-primary"
-            href={hunt.finish.ctaHref ?? "/hunt"}
+            href={hunt.finish.ctaHref ?? "/start"}
           >
             {hunt.finish.ctaLabel ?? "Back To Start"}
           </a>
